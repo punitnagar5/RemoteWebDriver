@@ -24,7 +24,7 @@ public class TestUserApi{
 	List<WebElement> GET;
 	@FindAll({@FindBy(css = "li[data-http='post']")})
 	List<WebElement> POST;
-	@FindBy(css = "#console > div.endpbody > div.header-content > header > section > h1 > aoints > ul > li:nth-child(8)")
+	@FindBy(css = "li[data-id='put']")
 	WebElement PUT;
 	@FindBy(className ="response-code")
 	WebElement ResponseCode;
@@ -42,12 +42,16 @@ public class TestUserApi{
 	WebElement MainPage_Reqires;
 	@FindBy(css = "body > div.header-content > main > div > h2:nth-child(1)")
 	WebElement Heading2;
+	@FindBy(className = "url")
+	WebElement RequestUrl;
 
 	
 	
 	public void code() throws InterruptedException
 	{
 			Thread.sleep(1000);
+			wait.until(ExpectedConditions.visibilityOf(ResponseCode)).isEnabled();
+			((JavascriptExecutor) driver).executeScript("scroll(0,900);");
 			String statusCode = ResponseCode.getText();
 			System.out.println("Response code\t" +statusCode);
 	}
@@ -56,7 +60,6 @@ public class TestUserApi{
 	
 	@BeforeClass
 	 public void RequiredCondition() {
-		System.setProperty("webdriver.chrome.driver", "/home/qainfotech/eclipse-workspace/MyProject/chromedriver");
 		driver = new ChromeDriver();
 		driver.get("https://reqres.in/");
 		driver.manage().window().maximize();
@@ -82,6 +85,9 @@ public class TestUserApi{
 		((JavascriptExecutor) driver).executeScript("scroll(0,900);");
 		GET.get(0).click();
 		code();
+		String expectedReq = "/api/users?page=2";
+		String CurrentReq = RequestUrl.getText();	
+		Assert.assertEquals(expectedReq,CurrentReq,"Request Not Matched");
 	}
 	
 	
@@ -92,9 +98,11 @@ public class TestUserApi{
 		((JavascriptExecutor) driver).executeScript("scroll(0,900);");
 		GET.get(1).click();
 		code();
+		String expectedReq = "/api/users/2";
+		String CurrentReq = RequestUrl.getText();
+		Assert.assertEquals(expectedReq,CurrentReq,"Request Not Matched");
 		
 	}
-	
 	
 	@Test(priority = 3)
 	public void VerifySingleUserNotFound() throws InterruptedException
@@ -102,6 +110,9 @@ public class TestUserApi{
 		((JavascriptExecutor) driver).executeScript("scroll(0,900);");
 		GET.get(2).click();
 		code();
+		String expectedReq = "/api/users/23";
+		String CurrentReq = RequestUrl.getText();
+				Assert.assertEquals(expectedReq,CurrentReq,"Request Not Matched");
 		
 	}
 	
@@ -112,6 +123,9 @@ public class TestUserApi{
 		((JavascriptExecutor) driver).executeScript("scroll(0,950);");
 		GET.get(3).click();
 		code();
+		String expectedReq = "/api/unknown";
+		String CurrentReq = RequestUrl.getText();
+				Assert.assertEquals(expectedReq,CurrentReq,"Request Not Matched");
 	}
 	
 	@Test(priority = 5)
@@ -121,14 +135,20 @@ public class TestUserApi{
 		GET.get(4).click();
 		Thread.sleep(500);
 		code();
+		String expectedReq = "/api/unknown/2";
+		String CurrentReq = RequestUrl.getText();
+				Assert.assertEquals(expectedReq,CurrentReq,"Request Not Matched");
 		}
 	
 	@Test(priority = 6)
 	public void SingleResourceNotFound() throws InterruptedException
-	{
+{
 		((JavascriptExecutor) driver).executeScript("scroll(0,950);");
 		GET.get(5).click();
 		code();
+		String expectedReq = "/api/unknown/23";
+		String CurrentReq = RequestUrl.getText();
+				Assert.assertEquals(expectedReq,CurrentReq,"Request Not Matched");
 	}
 	@Test(priority = 7)
 	public void Create() throws InterruptedException
@@ -136,6 +156,9 @@ public class TestUserApi{
 		((JavascriptExecutor) driver).executeScript("scroll(0,950);");
 		POST.get(0).click();
 		code();
+		String expectedReq = "/api/users";
+		String CurrentReq = RequestUrl.getText();
+				Assert.assertEquals(expectedReq,CurrentReq,"Request Not Matched");
 	}
 	@Test(priority = 8)
 	public void VerifyUpdatePUT() throws InterruptedException
@@ -143,6 +166,9 @@ public class TestUserApi{
 		((JavascriptExecutor) driver).executeScript("scroll(0,980);");
 		PUT.click();
 		code();
+			String expectedReq = "/api/users/2";
+			String CurrentReq = RequestUrl.getText();
+				Assert.assertEquals(expectedReq,CurrentReq,"Request Not Matched");
 	}
 	
 	
@@ -152,6 +178,9 @@ public class TestUserApi{
 		((JavascriptExecutor) driver).executeScript("scroll(0,980);");
 		PATCH.click();
 		code();
+		String expectedReq = "/api/users/2";
+		String CurrentReq = RequestUrl.getText();
+				Assert.assertEquals(expectedReq,CurrentReq,"Request Not Matched");
 	}
 	@Test(priority = 10)
 	public void VerifyDelete() throws InterruptedException
@@ -159,6 +188,9 @@ public class TestUserApi{
 		((JavascriptExecutor) driver).executeScript("scroll(0,980);");
 		DELETE.click();
 		code();
+		String expectedReq = "/api/users/2";
+		String CurrentReq = RequestUrl.getText();
+				Assert.assertEquals(expectedReq,CurrentReq,"Request Not Matched");
 	}
 	
 	@Test(priority = 11)
@@ -167,6 +199,9 @@ public class TestUserApi{
 		((JavascriptExecutor) driver).executeScript("scroll(0,1050);");
 		POST.get(1).click();
 		code();
+		String expectedReq = "/api/register";
+		String CurrentReq = RequestUrl.getText();
+				Assert.assertEquals(expectedReq,CurrentReq,"Request Not Matched");
 	}
 	
 	@Test(priority = 12)
@@ -175,22 +210,31 @@ public class TestUserApi{
 		((JavascriptExecutor) driver).executeScript("scroll(0,1050);");
 		POST.get(2).click();
 		code();
+		String expectedReq = "/api/register";
+		String CurrentReq = RequestUrl.getText();
+				Assert.assertEquals(expectedReq,CurrentReq,"Request Not Matched");
 	}
 	
 	@Test(priority = 13)
 	public void LoginSuccessfull() throws InterruptedException
-	{
+{
 		((JavascriptExecutor) driver).executeScript("scroll(0,1050);");
 		POST.get(3).click();
 		code();
+		String expectedReq = "/api/login";
+		String CurrentReq = RequestUrl.getText();
+				Assert.assertEquals(expectedReq,CurrentReq,"Request Not Matched");
 	}
 	
 	@Test(priority = 14)
 	public void Login_UnSuccessfull() throws InterruptedException
 	{
 		((JavascriptExecutor) driver).executeScript("scroll(0,1050);");
-		POST.get(4).click();
+	POST.get(4).click();
 		code();
+		String expectedReq = "/api/login";
+		String CurrentReq = RequestUrl.getText();
+				Assert.assertEquals(expectedReq,CurrentReq,"Request Not Matched");
 	}
 	
 	@Test(priority = 15)
@@ -198,7 +242,12 @@ public class TestUserApi{
 	{
 		((JavascriptExecutor) driver).executeScript("scroll(0,1050);");
 		GET.get(6).click();
+		wait.until(ExpectedConditions.visibilityOf(ResponseCode)).isEnabled();
 		code();
+		String expectedReq = "/api/users?delay=3";
+		String CurrentReq = RequestUrl.getText();
+		
+				Assert.assertEquals(expectedReq,CurrentReq,"Request Not Matched");
 	}
 	
 	
@@ -222,7 +271,8 @@ public class TestUserApi{
 			Assert.assertEquals(ExpectedUrl,driver.getCurrentUrl(),"error occur");
 			System.out.println("you are on GitHub page linked with this UI");
 			driver.navigate().back();
+			((JavascriptExecutor) driver).executeScript("scroll(0,0);");
 
+			
 	}
-	
 }
